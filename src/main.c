@@ -23,12 +23,19 @@
  */
 #define ECHO_PIN    ((uint32_t)(1 << 4)) /**< P0.4 */
 #define TRIGGER_PIN ((uint32_t)(1 << 5)) /**< P0.5 */
+#define LED_PIN     ((uint32_t)(1 << 6)) /**< P0.6 */
 
 /**
- * Booleans 
+ * Booleans
  */
-#define TRUE 1
+#define TRUE  1
 #define FALSE 0
+
+/**
+ * OUTPUT and INPUT Definitions
+ */
+#define OUTPUT 1 /**< Output */
+#define INPUT  0 /**< Input */
 
 /**
  * Object Count Definitions
@@ -52,11 +59,18 @@
  */
 static uint32_t max_time =
     (uint32_t)(DISTANCE - SAFE_MARGIN) * 2 / SPEED_OF_SOUND * 1000000; /**< Maximum time for the echo signal */
-static uint32_t echo_down_flag = FALSE;                                    /**< Flag to check if the echo signal is down */
+static uint32_t echo_down_flag = FALSE;                                /**< Flag to check if the echo signal is down */
 static uint32_t echo_up_time = 0;                                      /**< Time when the echo signal is up */
 static uint32_t echo_down_time = 0;                                    /**< Time when the echo signal is down */
 static uint32_t object_count = 0;                                      /**< Count of objects detected */
 static uint16_t detection_flag = FALSE; /**< Flag to check if an object is being detected */
+
+/**
+ * @brief configures the pins.
+ *
+ * This function configures the pins.
+ */
+void config_pins(void);
 
 /**
  * @brief Configures the timer.
@@ -71,6 +85,56 @@ void config_timer(void);
  * This function checks if an object is detected and increments the object count.
  */
 void check_object(void);
+
+/**
+ * @brief Turns on the count LED.
+ *
+ * This function turns on the count LED when an object is detected.
+ */
+void turn_on_led(void);
+
+/**
+ * @brief Turns off the count LED.
+ *
+ * This function turns off the count LED when an object is not detected.
+ */
+void turn_off_led(void);
+
+void config_pins(void)
+{
+    PINSEL_CFG_Type PinCfg;
+
+    // Configure the ECHO pin
+    PinCfg.Portnum = 0;
+    PinCfg.Pinnum = 4;
+    PinCfg.Funcnum = PINSEL_FUNC_3;
+    PinCfg.Pinmode = PINSEL_PINMODE_TRISTATE;
+    PinCfg.OpenDrain = PINSEL_PINMODE_NORMAL;
+    PINSEL_ConfigPin(&PinCfg);
+
+    // Configure the TRIGGER pin
+    PinCfg.Pinnum = 5;
+    PinCfg.Funcnum = PINSEL_FUNC_0;
+    PinCfg.Pinmode = PINSEL_PINMODE_TRISTATE;
+    PinCfg.OpenDrain = PINSEL_PINMODE_NORMAL;
+    PINSEL_ConfigPin(&PinCfg);
+
+    // Configure the LED pin
+    PinCfg.Pinnum = 6;
+    PinCfg.Funcnum = PINSEL_FUNC_0;
+    PinCfg.Pinmode = PINSEL_PINMODE_PULLUP;
+    PinCfg.OpenDrain = PINSEL_PINMODE_NORMAL;
+    PINSEL_ConfigPin(&PinCfg);
+
+    // Set the TRIGGER pin as output
+    GPIO_SetDir(PINSEL_PORT_0, TRIGGER_PIN, OUTPUT);
+
+    // Set the LED pin as output
+    GPIO_SetDir(PINSEL_PORT_0, LED_PIN, OUTPUT);
+
+    // Set the ECHO pin as input
+    GPIO_SetDir(PINSEL_PORT_0, ECHO_PIN, INPUT);
+}
 
 void config_timer(void)
 {
@@ -117,13 +181,23 @@ void config_timer(void)
     NVIC_EnableIRQ(TIMER2_IRQn);
 }
 
+void turn_on_led(void)
+{
+    GPIO_SetValue(PINSEL_PORT_0, LED_PIN);
+}
+
+void turn_off_led(void)
+{
+    GPIO_ClearValue(PINSEL_PORT_0, LED_PIN);
+}
+
 void check_object(void)
-{   
+{
     // Calculate the time taken for the echo signal
     uint32_t echo_time = echo_down_time - echo_up_time;
 
     if (echo_time < max_time)
-    {   
+    {
         // If an object is detected, set the detection flag
         detection_flag = TRUE;
     }
@@ -133,9 +207,11 @@ void check_object(void)
         if (detection_flag)
         {
             object_count++;
+            turn_on_led();
         }
 
         detection_flag = FALSE;
+        turn_off_led();
     }
 }
 
