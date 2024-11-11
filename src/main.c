@@ -21,8 +21,8 @@
  *
  * Definitions for the pins used in the application.
  */
-#define ECHO_PIN    ((uint32_t)(1 << 26)) /**< P1.26 */
-#define TRIGGER_PIN ((uint32_t)(1 << 27)) /**< P1.27 */
+#define ECHO_PIN    ((uint32_t)(1 << 4)) /**< P0.4 */
+#define TRIGGER_PIN ((uint32_t)(1 << 5)) /**< P0.5 */
 
 /**
  * Booleans 
@@ -77,10 +77,10 @@ void config_timer(void)
     TIM_TIMERCFG_Type timer_cfg_struct;
     TIM_MATCHCFG_Type match_cfg_struct;
 
-    // Configure Timer0 in microsecond mode with a prescaler
+    // Configure Timer2 in microsecond mode with a prescaler
     timer_cfg_struct.PrescaleOption = TIM_PRESCALE_USVAL; // Prescaler in microseconds
     timer_cfg_struct.PrescaleValue = PRESCALER_VALUE;     // Prescaler for 100 MHz clock
-    TIM_Init(LPC_TIM0, TIM_TIMER_MODE, &timer_cfg_struct);
+    TIM_Init(LPC_TIM2, TIM_TIMER_MODE, &timer_cfg_struct);
 
     // Configure match channel to set the TRIGGER pin
     match_cfg_struct.MatchChannel = 0;
@@ -89,32 +89,32 @@ void config_timer(void)
     match_cfg_struct.ResetOnMatch = DISABLE;
     match_cfg_struct.ExtMatchOutputType = TIM_EXTMATCH_NOTHING;
     match_cfg_struct.MatchValue = (uint32_t)(START_TIME); // match value for the interrupt
-    TIM_ConfigMatch(LPC_TIM0, &match_cfg_struct);
+    TIM_ConfigMatch(LPC_TIM2, &match_cfg_struct);
 
     // Configure match channel to clear the TRIGGER pin
     match_cfg_struct.MatchChannel = 1;
     match_cfg_struct.MatchValue = (uint32_t)(START_TIME + TRIGGER_TIME); // match value for the interrupt
-    TIM_ConfigMatch(LPC_TIM0, &match_cfg_struct);
+    TIM_ConfigMatch(LPC_TIM2, &match_cfg_struct);
 
     // Configure match channel to reset the timer
     match_cfg_struct.MatchChannel = 2;
     match_cfg_struct.IntOnMatch = DISABLE;
     match_cfg_struct.ResetOnMatch = ENABLE;
     match_cfg_struct.MatchValue = (uint32_t)(RESET_TIME); // match value for the interrupt
-    TIM_ConfigMatch(LPC_TIM0, &match_cfg_struct);
+    TIM_ConfigMatch(LPC_TIM2, &match_cfg_struct);
 
-    // CAP0.0 Configuration for rising and falling edge capture
+    // CAP2.0 Configuration for rising and falling edge capture
     TIM_CAPTURECFG_Type capCfg;
     capCfg.CaptureChannel = 0;
     capCfg.FallingEdge = ENABLE;
     capCfg.IntOnCaption = ENABLE;
     capCfg.RisingEdge = ENABLE;
 
-    // Initialize Timer0 in timer mode
-    TIM_ConfigCapture(LPC_TIM0, &capCfg);
+    // Initialize Timer2 in timer mode
+    TIM_ConfigCapture(LPC_TIM2, &capCfg);
 
-    // Enable Timer0 interrupt
-    NVIC_EnableIRQ(TIMER0_IRQn);
+    // Enable Timer2 interrupt
+    NVIC_EnableIRQ(TIMER2_IRQn);
 }
 
 void check_object(void)
@@ -140,33 +140,33 @@ void check_object(void)
 }
 
 /**
- * @brief Timer0 interrupt handler to toggle LEDs.
+ * @brief Timer2 interrupt handler to toggle LEDs.
  */
-void TIMER0_IRQHandler(void)
+void TIMER2_IRQHandler(void)
 {
     // Check and clear match interrupt for each channel
 
-    if (TIM_GetIntStatus(LPC_TIM0, TIM_MR0_INT))
+    if (TIM_GetIntStatus(LPC_TIM2, TIM_MR0_INT))
     {
-        TIM_ClearIntPending(LPC_TIM0, TIM_MR0_INT);
+        TIM_ClearIntPending(LPC_TIM2, TIM_MR0_INT);
         GPIO_SetValue(PINSEL_PORT_1, TRIGGER_PIN); // Set TRIGGER pin
     }
-    if (TIM_GetIntStatus(LPC_TIM0, TIM_MR1_INT))
+    if (TIM_GetIntStatus(LPC_TIM2, TIM_MR1_INT))
     {
-        TIM_ClearIntPending(LPC_TIM0, TIM_MR1_INT);
+        TIM_ClearIntPending(LPC_TIM2, TIM_MR1_INT);
         GPIO_ClearValue(PINSEL_PORT_1, TRIGGER_PIN); // Clear TRIGGER pin
     }
-    if (TIM_GetIntStatus(LPC_TIM0, TIM_CR0_INT))
+    if (TIM_GetIntStatus(LPC_TIM2, TIM_CR0_INT))
     {
-        TIM_ClearIntPending(LPC_TIM0, TIM_CR0_INT);
+        TIM_ClearIntPending(LPC_TIM2, TIM_CR0_INT);
         if (echo_down_flag == FALSE)
         {
-            echo_up_time = TIM_GetCaptureValue(LPC_TIM0, 0);
+            echo_up_time = TIM_GetCaptureValue(LPC_TIM2, 0);
             echo_down_flag = TRUE;
         }
         else
         {
-            echo_down_time = TIM_GetCaptureValue(LPC_TIM0, 0);
+            echo_down_time = TIM_GetCaptureValue(LPC_TIM2, 0);
             echo_down_flag = FALSE;
 
             check_object();
