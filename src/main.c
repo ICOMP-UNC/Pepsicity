@@ -39,30 +39,30 @@
 
 /**
  * Object Count Definitions
+ *
+ * DISTANCE: The distance from the ultrasonic sensor to the surface in meters.
+ * SPEED_OF_SOUND: The speed of sound in air in meters per second.
+ * SAFE_MARGIN: The safe margin in meters.
  */
-#define DISTANCE       0.2  /**< Distance from ultrasonic sensor to surface in meters */
-#define SPEED_OF_SOUND 343  /**< Speed of sound in air in meters per second */
-#define SAFE_MARGIN    0.01 /**< Safe margin in meters */
 
 /**
  * Timer and Match Definitions
  *
  * Definitions for the timer and match registers used in the application.
  */
-#define START_TIME      5    /**< Set TRIGGER pin at 5us */
-#define TRIGGER_TIME    10   /**< TRIGGER set time to start an ultrasonic sensor measurement */
-#define RESET_TIME      1000 /**< Reset the timer */
-#define PRESCALER_VALUE 1    /**< value for prescaler */
+#define START_TIME      5     /**< Set TRIGGER pin at 5us */
+#define TRIGGER_TIME    10    /**< TRIGGER set time to start an ultrasonic sensor measurement */
+#define RESET_TIME      50000 /**< Reset the timer (an ultrasonic sensor measurement each 50ms) */
+#define PRESCALER_VALUE 1     /**< value for prescaler */
 
 /**
  * Global Variables
  */
 static uint32_t max_time =
-    (uint32_t)(DISTANCE - SAFE_MARGIN) * 2 / SPEED_OF_SOUND * 1000000; /**< Maximum time for the echo signal */
-static uint32_t echo_down_flag = FALSE;                                /**< Flag to check if the echo signal is down */
-static uint32_t echo_up_time = 0;                                      /**< Time when the echo signal is up */
-static uint32_t echo_down_time = 0;                                    /**< Time when the echo signal is down */
-static uint32_t object_count = 0;                                      /**< Count of objects detected */
+    2270; /**< Maximum time for the echo signal (DISTANCE - SAFE_MARGIN) * 2 / SPEED_OF_SOUND * 1000000;*/
+static uint32_t echo_up_time = 470;     /**< Time when the echo signal is up */
+static uint32_t echo_down_time = 0;     /**< Time when the echo signal is down */
+static uint32_t object_count = 0;       /**< Count of objects detected */
 static uint16_t detection_flag = FALSE; /**< Flag to check if an object is being detected */
 
 /**
@@ -108,7 +108,7 @@ void config_pins(void)
     PinCfg.Portnum = 0;
     PinCfg.Pinnum = 4;
     PinCfg.Funcnum = PINSEL_FUNC_3;
-    PinCfg.Pinmode = PINSEL_PINMODE_TRISTATE;
+    PinCfg.Pinmode = PINSEL_PINMODE_PULLDOWN;
     PinCfg.OpenDrain = PINSEL_PINMODE_NORMAL;
     PINSEL_ConfigPin(&PinCfg);
 
@@ -167,12 +167,12 @@ void config_timer(void)
     match_cfg_struct.MatchValue = (uint32_t)(RESET_TIME); // match value for the interrupt
     TIM_ConfigMatch(LPC_TIM2, &match_cfg_struct);
 
-    // CAP2.0 Configuration for rising and falling edge capture
+    // CAP2.0 Configuration for falling edge capture
     TIM_CAPTURECFG_Type capCfg;
     capCfg.CaptureChannel = 0;
     capCfg.FallingEdge = ENABLE;
     capCfg.IntOnCaption = ENABLE;
-    capCfg.RisingEdge = ENABLE;
+    capCfg.RisingEdge = DISABLE;
 
     // Initialize Timer2 in timer mode
     TIM_ConfigCapture(LPC_TIM2, &capCfg);
@@ -225,28 +225,20 @@ void TIMER2_IRQHandler(void)
     if (TIM_GetIntStatus(LPC_TIM2, TIM_MR0_INT))
     {
         TIM_ClearIntPending(LPC_TIM2, TIM_MR0_INT);
-        GPIO_SetValue(PINSEL_PORT_1, TRIGGER_PIN); // Set TRIGGER pin
+        GPIO_SetValue(PINSEL_PORT_0, TRIGGER_PIN); // Set TRIGGER pin
     }
     if (TIM_GetIntStatus(LPC_TIM2, TIM_MR1_INT))
     {
         TIM_ClearIntPending(LPC_TIM2, TIM_MR1_INT);
-        GPIO_ClearValue(PINSEL_PORT_1, TRIGGER_PIN); // Clear TRIGGER pin
+        GPIO_ClearValue(PINSEL_PORT_0, TRIGGER_PIN); // Clear TRIGGER pin
     }
     if (TIM_GetIntStatus(LPC_TIM2, TIM_CR0_INT))
     {
         TIM_ClearIntPending(LPC_TIM2, TIM_CR0_INT);
-        if (echo_down_flag == FALSE)
-        {
-            echo_up_time = TIM_GetCaptureValue(LPC_TIM2, 0);
-            echo_down_flag = TRUE;
-        }
-        else
-        {
-            echo_down_time = TIM_GetCaptureValue(LPC_TIM2, 0);
-            echo_down_flag = FALSE;
 
-            check_object();
-        }
+        echo_down_time = TIM_GetCaptureValue(LPC_TIM2, 0);  // Get the time when the echo signal is down
+
+        check_object(); // Check if an object is detected
     }
 }
 
@@ -258,6 +250,12 @@ void TIMER2_IRQHandler(void)
 int main(void)
 {
     SystemInit(); // Initialize the system
+
+    config_pins();
+
+    config_timer();
+
+    TIM_Cmd(LPC_TIM2, ENABLE);
 
     while (1)
     {
