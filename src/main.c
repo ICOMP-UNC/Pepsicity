@@ -236,7 +236,7 @@ void TIMER2_IRQHandler(void)
     {
         TIM_ClearIntPending(LPC_TIM2, TIM_CR0_INT);
 
-        echo_down_time = TIM_GetCaptureValue(LPC_TIM2, 0);  // Get the time when the echo signal is down
+        echo_down_time = TIM_GetCaptureValue(LPC_TIM2, 0); /**< Get the time when the echo signal is down */
 
         check_object(); // Check if an object is detected
     }
