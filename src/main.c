@@ -28,8 +28,8 @@
 /**
  * Booleans
  */
-#define TRUE  1
-#define FALSE 0
+#define TRUE  1 /**< True */
+#define FALSE 0 /**< False */
 
 /**
  * OUTPUT and INPUT Definitions
