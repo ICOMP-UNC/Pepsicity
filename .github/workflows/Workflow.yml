@@ -2,12 +2,12 @@ name: QA Workflow
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - '**'  # This triggers the workflow on every push to any branch
   pull_request:
     # Pull request events
     types: [synchronize, opened, reopened, ready_for_review]
-    # Trigger on any PR targeting any branch
-    branches:
-      - '**'  # This matches all branches
 
 
 jobs:
