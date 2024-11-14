@@ -5,6 +5,10 @@ on:
   pull_request:
     # Pull request events
     types: [synchronize, opened, reopened, ready_for_review]
+    # Trigger on any PR targeting any branch
+    branches:
+      - '**'  # This matches all branches
+
 
 jobs:
   QAFlow:
