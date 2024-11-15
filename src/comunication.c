@@ -58,6 +58,8 @@ void init_dma()
     GPDMA_Setup(&GPDMACfg_TX);
     GPDMA_ClearIntPending(GPDMA_STATCLR_INTTC, DMA_TX_CHANNEL);
     GPDMA_ChannelCmd(DMA_TX_CHANNEL, DISABLE);
+    // Deshabilitar la interrupción de transferencia
+    LPC_GPDMACH1->DMACCConfig &= ~(1 << 31);
 
     NVIC_EnableIRQ(DMA_IRQn);
 }
@@ -71,6 +73,11 @@ void send_data_dma_uart(const char* data, uint32_t size)
     GPDMA_ChannelCmd(DMA_TX_CHANNEL, ENABLE);
 }
 
+uint16_t get_decimal_data(uint8_t* data)
+{
+	return (uint16_t)strtol((char*)data, NULL, 10);
+}
+
 void DMA_IRQHandler()
 {
     if (GPDMA_IntGetStatus(GPDMA_STAT_INT, 0))
@@ -78,9 +85,6 @@ void DMA_IRQHandler()
         GPDMA_ClearIntPending(GPDMA_STATCLR_INTTC, 0);
         GPDMA_Setup(&GPDMACfg_RX);
         GPDMA_ChannelCmd(DMA_RX_CHANNEL, ENABLE);
-        // Ejemplo de uso de la función send_data_dma_uart, \n es un salto de línea y \r es un retorno al inicio de la línea
-        char data[] = "Mensaje 2\n\r";
-        send_data_dma_uart(data, sizeof(data));
     }
     else if (GPDMA_IntGetStatus(GPDMA_STAT_INTERR, 0) || GPDMA_IntGetStatus(GPDMA_STAT_INTERR, 1))
     {
