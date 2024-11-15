@@ -18,6 +18,7 @@
 #include "lpc17xx_uart.h"
 
 #include "../inc/configure_pins.h"
+#include "../inc/counting_module.h"
 
 /**
  * @brief EINT0 interrupt handler
