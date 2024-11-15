@@ -57,6 +57,7 @@ SRCS = lpc17xx_libcfg_default.c \
 	 lpc17xx_adc.c \
 	 lpc17xx_dac.c \
 	 lpc17xx_gpdma.c \
+	 lpc17xx_exti.c \
 
 # OBJS: Converts each source file name (.c) into its corresponding object file name (.o).
 OBJS = $(SRCS:.c=.o)

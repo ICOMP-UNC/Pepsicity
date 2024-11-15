@@ -6,13 +6,15 @@
 # Add all the source files here, ending with \ to continue on the next line.
 SRCS =	newlib_stubs.c \
 		system_LPC17xx.c \
-		main.c
+		main.c \
+		configure_pins.c 
+		
  
 	 
 # Define the name of the project
 # This will be the name of the final binary file
 
-PROJ_NAME=gates-of-survival
+PROJ_NAME=pepsicity
 
 # You should not need to change anything below this line =D
 
@@ -62,7 +64,7 @@ vpath %.c src
 vpath %.c $(ROOT)/lib/CMSISv2p00_LPC17xx/src 
 vpath %.c $(ROOT)/lib/CMSISv2p00_LPC17xx/drivers/src
 
-CFLAGS += -I$(ROOT)/include 
+CFLAGS += -I$(ROOT)/inc
 CFLAGS += -I$(ROOT)/lib/CMSISv2p00_LPC17xx/include
 CFLAGS += -I$(ROOT)/lib/CMSISv2p00_LPC17xx/drivers/include
 
