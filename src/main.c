@@ -7,7 +7,7 @@
 #include "LPC17xx.h"
 #endif
 
-#include "../lib/comunication.h"
+#include "../lib/communication.h"
 #include "lpc17xx_adc.h"
 #include "lpc17xx_dac.h"
 #include "lpc17xx_gpio.h"
@@ -16,26 +16,6 @@
 #include "lpc17xx_timer.h"
 #include "lpc17xx_uart.h"
 #include "lpc17xx_gpdma.h"
-
-#define TRANSMITTER_PIN ((uint32_t)(1<<10))    // P0.10 connected to transmitter pin
-#define RECEIVER_PIN   ((uint32_t)(1<<11))    // P0.11 connected to receiver pin
-
-#define INPUT 0
-#define OUTPUT 1
-
-static char mode = 'A';
-
-/* UART parameters */
-#define MODO_A "MODO A"
-#define MODO_B "MODO B"
-#define MODO_C "MODO C"
-#define speed "="
-
-static uint32_t object_count = 0;       /**< Count of objects detected */
-static uint32_t limit_flag = 0;         /**< Limit flag */
-static uint32_t get_count_flag = 0;          /**< Get count flag */
-static uint16_t temperature = 0;        /**< Temperature value */
-static uint8_t speed_level = 0;         /**< Speed level */
 
 
 void configure_pins(void)
@@ -64,7 +44,7 @@ int main(void)
 {
     SystemInit(); // Initialize the system
     configure_pins(); // Configure the pins
-    init_comunication(); // Initialize the communication
+    init_communication(); // Initialize the communication
 
     while (1)
     {
@@ -72,55 +52,4 @@ int main(void)
     }
 
     return 0; // Should never reach this
-}
-
-void start(void)
-{
-    // Start conveyor belt
-}
-
-void stop(void)
-{
-    // Stop conveyor belt
-}
-
-void check_mode(void)
-{
-    if(mode == 'A')
-    {
-        send_counter();
-    }
-    else if(mode == 'B')
-    {
-        if(get_count_flag == 1)
-        {
-            send_counter();
-        }
-    }
-    else if(mode == 'C')
-    {
-        if(object_count == limit_flag) 
-        {
-            send_counter();
-            object_count = 0;
-            stop();
-        }
-    }
-}
-
-void send_counter(void)
-{
-    // Send Counter
-    send_data_dma_uart(object_count, sizeof(object_count));
-}
-
-void send_temperature()
-{
-    // Send Temperature
-    send_data_dma_uart(temperature, sizeof(temperature));
-}
-
-void set_velocity(void)
-{
-    // Set velocity
 }
