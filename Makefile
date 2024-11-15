@@ -12,7 +12,7 @@ SRCS =	newlib_stubs.c \
 # Define the name of the project
 # This will be the name of the final binary file
 
-PROJ_NAME=gates-of-survival
+PROJ_NAME=pepsicity
 
 # You should not need to change anything below this line =D
 
