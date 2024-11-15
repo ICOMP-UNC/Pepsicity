@@ -1,13 +1,14 @@
 /**
  * @file configure_pins.c
  * @brief Configure the pins for the project
- * 
+ *
  * This file contains the pin configuration for the project.
  */
 
 #include "../inc/configure_pins.h"
 
-void configure_pins(void) {
+void configure_pins(void)
+{
     PINSEL_CFG_Type PinCfg;
 
     // Configure the start button pin
@@ -25,7 +26,8 @@ void configure_pins(void) {
     PINSEL_ConfigPin(&PinCfg);
 }
 
-void configure_interrupts(void) {
+void configure_interrupts(void)
+{
 
     EXTI_InitTypeDef EXTI_InitStruct;
 
