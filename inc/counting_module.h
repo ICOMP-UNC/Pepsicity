@@ -39,6 +39,8 @@
 #define RESET_TIME      50000 /**< Reset the timer (an ultrasonic sensor measurement each 50ms) */
 #define PRESCALER_VALUE 1     /**< value for prescaler */
 #define MATCH_CHANNEL_0 0     /**< Match channel 0 */
+#define MATCH_CHANNEL_1 1     /**< Match channel 1 */
+#define MATCH_CHANNEL_2 2     /**< Match channel 2 */
 #define CAPTURE_CHANNEL 0     /**< Capture channel 0 */
 
 /**

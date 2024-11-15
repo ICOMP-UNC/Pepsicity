@@ -13,37 +13,37 @@ void config_timer(void)
     TIM_MATCHCFG_Type match_cfg_struct;
 
     // Configure Timer2 in microsecond mode with a prescaler
-    timer_cfg_struct.PrescaleOption = TIM_PRESCALE_USVAL; // Prescaler in microseconds
-    timer_cfg_struct.PrescaleValue = PRESCALER_VALUE;     // Prescaler for 100 MHz clock
+    timer_cfg_struct.PrescaleOption = TIM_PRESCALE_USVAL; /**< Prescaler in microseconds */
+    timer_cfg_struct.PrescaleValue = PRESCALER_VALUE;     /**< Prescaler for 100 MHz clock */
     TIM_Init(LPC_TIM2, TIM_TIMER_MODE, &timer_cfg_struct);
 
     // Configure match channel to set the TRIGGER pin
-    match_cfg_struct.MatchChannel = MATCH_CHANNEL_0;
-    match_cfg_struct.IntOnMatch = ENABLE;
-    match_cfg_struct.StopOnMatch = DISABLE;
-    match_cfg_struct.ResetOnMatch = DISABLE;
-    match_cfg_struct.ExtMatchOutputType = TIM_EXTMATCH_NOTHING;
-    match_cfg_struct.MatchValue = (uint32_t)(START_TIME); // match value for the interrupt
+    match_cfg_struct.MatchChannel = MATCH_CHANNEL_0;            /**< Match channel 0 */
+    match_cfg_struct.IntOnMatch = ENABLE;                       /**< Enable interrupt on match */
+    match_cfg_struct.StopOnMatch = DISABLE;                     /**< Do not stop on match */
+    match_cfg_struct.ResetOnMatch = DISABLE;                    /**< Do not reset on match */
+    match_cfg_struct.ExtMatchOutputType = TIM_EXTMATCH_NOTHING; /**< Do nothing on match */
+    match_cfg_struct.MatchValue = (uint32_t)(START_TIME);       /**< match value for the interrupt */
     TIM_ConfigMatch(LPC_TIM2, &match_cfg_struct);
 
     // Configure match channel to clear the TRIGGER pin
-    match_cfg_struct.MatchChannel = 1;
-    match_cfg_struct.MatchValue = (uint32_t)(START_TIME + TRIGGER_TIME); // match value for the interrupt
+    match_cfg_struct.MatchChannel = MATCH_CHANNEL_1;                     /**< Match channel 1 */
+    match_cfg_struct.MatchValue = (uint32_t)(START_TIME + TRIGGER_TIME); /**< match value for the interrupt */
     TIM_ConfigMatch(LPC_TIM2, &match_cfg_struct);
 
     // Configure match channel to reset the timer
-    match_cfg_struct.MatchChannel = 2;
-    match_cfg_struct.IntOnMatch = DISABLE;
-    match_cfg_struct.ResetOnMatch = ENABLE;
-    match_cfg_struct.MatchValue = (uint32_t)(RESET_TIME); // match value for the interrupt
+    match_cfg_struct.MatchChannel = MATCH_CHANNEL_2;      /**< Match channel 2 */
+    match_cfg_struct.IntOnMatch = DISABLE;                /**< Disable interrupt on match */
+    match_cfg_struct.ResetOnMatch = ENABLE;               /**< Reset on match */
+    match_cfg_struct.MatchValue = (uint32_t)(RESET_TIME); /**<  match value for the interrupt */
     TIM_ConfigMatch(LPC_TIM2, &match_cfg_struct);
 
     // CAP2.0 Configuration for falling edge capture
     TIM_CAPTURECFG_Type capCfg;
-    capCfg.CaptureChannel = CAPTURE_CHANNEL;
-    capCfg.FallingEdge = ENABLE;
-    capCfg.IntOnCaption = ENABLE;
-    capCfg.RisingEdge = DISABLE;
+    capCfg.CaptureChannel = CAPTURE_CHANNEL; /**< Capture channel 0 */
+    capCfg.FallingEdge = ENABLE;             /**< Capture on falling edge */
+    capCfg.IntOnCaption = ENABLE;            /**< Enable interrupt on capture */
+    capCfg.RisingEdge = DISABLE;             /**< Do not capture on rising edge */
 
     // Initialize Timer2 in timer mode
     TIM_ConfigCapture(LPC_TIM2, &capCfg);
