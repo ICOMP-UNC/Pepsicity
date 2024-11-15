@@ -24,11 +24,44 @@ void configure_pins(void)
     PinCfg.Pinnum = PINSEL_PIN_11;
 
     PINSEL_ConfigPin(&PinCfg);
+    
+    // Configure the ECHO pin
+    PinCfg.Portnum = 0;
+    PinCfg.Pinnum = 4;
+    PinCfg.Funcnum = PINSEL_FUNC_3;
+    PinCfg.Pinmode = PINSEL_PINMODE_PULLDOWN;
+    PinCfg.OpenDrain = PINSEL_PINMODE_NORMAL;
+
+    PINSEL_ConfigPin(&PinCfg);
+
+    // Configure the TRIGGER pin
+    PinCfg.Pinnum = 5;
+    PinCfg.Funcnum = PINSEL_FUNC_0;
+    PinCfg.Pinmode = PINSEL_PINMODE_TRISTATE;
+    PinCfg.OpenDrain = PINSEL_PINMODE_NORMAL; 
+
+    PINSEL_ConfigPin(&PinCfg);
+
+    // Configure the LED pin
+    PinCfg.Pinnum = 6;
+    PinCfg.Funcnum = PINSEL_FUNC_0;
+    PinCfg.Pinmode = PINSEL_PINMODE_PULLUP;
+    PinCfg.OpenDrain = PINSEL_PINMODE_NORMAL;
+
+    PINSEL_ConfigPin(&PinCfg);
+
+    // Set the TRIGGER pin as output
+    GPIO_SetDir(PINSEL_PORT_0, TRIGGER_PIN, OUTPUT);
+
+    // Set the LED pin as output
+    GPIO_SetDir(PINSEL_PORT_0, LED_PIN, OUTPUT);
+
+    // Set the ECHO pin as input
+    GPIO_SetDir(PINSEL_PORT_0, ECHO_PIN, INPUT);
 }
 
 void configure_interrupts(void)
 {
-
     EXTI_InitTypeDef EXTI_InitStruct;
 
     // Configure the start button interrupt
