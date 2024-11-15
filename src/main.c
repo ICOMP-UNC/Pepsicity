@@ -14,6 +14,8 @@
 #include "lpc17xx_pinsel.h"
 #include "lpc17xx_systick.h"
 #include "lpc17xx_timer.h"
+#include "lpc17xx_uart.h"
+#include "lpc17xx_gpdma.h"
 
 #define TRANSMITTER_PIN ((uint32_t)(1<<10))    // P0.10 connected to transmitter pin
 #define RECEIVER_PIN   ((uint32_t)(1<<11))    // P0.11 connected to receiver pin
@@ -22,7 +24,6 @@
 #define OUTPUT 1
 
 static char mode = 'A';
-static limit_flag = 0;
 
 /* UART parameters */
 #define MODO_A "MODO A"
@@ -30,8 +31,12 @@ static limit_flag = 0;
 #define MODO_C "MODO C"
 #define speed "="
 
-/* DMA parameters */
-GPDMA_LLI_Type LLI_TX;
+static uint32_t object_count = 0;       /**< Count of objects detected */
+static uint32_t limit_flag = 0;         /**< Limit flag */
+static uint32_t get_count_flag = 0;          /**< Get count flag */
+static uint16_t temperature = 0;        /**< Temperature value */
+static uint8_t speed_level = 0;         /**< Speed level */
+
 
 void configure_pins(void)
 {
@@ -48,19 +53,6 @@ void configure_pins(void)
     cfg_pin.Funcnum = PINSEL_FUNC_1;
     cfg_pin.Pinmode = PINSEL_PINMODE_TRISTATE;
     PINSEL_ConfigPin(&cfg_pin);
-
-    GPIO_SetDir(PINSEL_PORT_0, TRANSMITTER_PIN, OUTPUT);
-
-    GPIO_SetDir(PINSEL_PORT_0, RECEIVER_PIN, INPUT);
-}
-
-void configure_uart(void)
-{
-    //
-}
-
-void configure_gpdma(void)
-{
 }
 
 /**
@@ -100,15 +92,35 @@ void check_mode(void)
     }
     else if(mode == 'B')
     {
-        send_counter();
+        if(get_count_flag == 1)
+        {
+            send_counter();
+        }
     }
     else if(mode == 'C')
     {
-        send_counter();
+        if(object_count == limit_flag) 
+        {
+            send_counter();
+            object_count = 0;
+            stop();
+        }
     }
 }
 
 void send_counter(void)
 {
-    
+    // Send Counter
+    send_data_dma_uart(object_count, sizeof(object_count));
+}
+
+void send_temperature()
+{
+    // Send Temperature
+    send_data_dma_uart(temperature, sizeof(temperature));
+}
+
+void set_velocity(void)
+{
+    // Set velocity
 }

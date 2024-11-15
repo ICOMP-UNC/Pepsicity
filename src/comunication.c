@@ -1,8 +1,10 @@
 #include "../lib/comunication.h"
 
-uint8_t data_Rx[RX_BUFF_SIZE];
-uint8_t data_Tx[TX_BUFF_SIZE];
+/* Buffers */
+static uint8_t data_Rx[RX_BUFF_SIZE];
+static uint8_t data_Tx[TX_BUFF_SIZE];
 
+/* GPDMA Config */
 GPDMA_Channel_CFG_Type GPDMACfg_RX = {
     DMA_RX_CHANNEL,         // ChannelNum
     RX_BUFF_SIZE,           // TransferSize
@@ -15,6 +17,7 @@ GPDMA_Channel_CFG_Type GPDMACfg_RX = {
     (uint32_t)NULL          // DMALLI
 };
 
+/* GPDMA Config */
 GPDMA_Channel_CFG_Type GPDMACfg_TX = {
     DMA_TX_CHANNEL,                // ChannelNum
     TX_BUFF_SIZE,                  // TransferSize
@@ -27,13 +30,19 @@ GPDMA_Channel_CFG_Type GPDMACfg_TX = {
     (uint32_t)NULL                 // DMALLI
 };
 
+/**
+ * @brief Initialize UART and DMA
+ */
 void init_comunication()
 {
-    config_uart();
+    configure_uart();
     init_dma();
 }
 
-void config_uart()
+/**
+ * @brief Configure UART for comunication
+ */
+void configure_uart()
 {
     UART_CFG_Type UARTConfigStruct;
     UART_FIFO_CFG_Type UARTFIFOConfigStruct;
@@ -48,6 +57,9 @@ void config_uart()
     UART_FIFOConfig(LPC_UART2, &UARTFIFOConfigStruct);
 }
 
+/**
+ * @brief   Configure DMA for transmission and reception data
+ */
 void init_dma()
 {
     GPDMA_Init();
@@ -73,16 +85,16 @@ void send_data_dma_uart(const char* data, uint32_t size)
 
 void DMA_IRQHandler()
 {
-    if (GPDMA_IntGetStatus(GPDMA_STAT_INT, 0))
+    if (GPDMA_IntGetStatus(GPDMA_STAT_INT, DMA_RX_CHANNEL))
     {
-        GPDMA_ClearIntPending(GPDMA_STATCLR_INTTC, 0);
+        GPDMA_ClearIntPending(GPDMA_STATCLR_INTTC, DMA_RX_CHANNEL);
         GPDMA_Setup(&GPDMACfg_RX);
         GPDMA_ChannelCmd(DMA_RX_CHANNEL, ENABLE);
         // Ejemplo de uso de la función send_data_dma_uart, \n es un salto de línea y \r es un retorno al inicio de la línea
         char data[] = "Mensaje 2\n\r";
         send_data_dma_uart(data, sizeof(data));
     }
-    else if (GPDMA_IntGetStatus(GPDMA_STAT_INTERR, 0) || GPDMA_IntGetStatus(GPDMA_STAT_INTERR, 1))
+    else if (GPDMA_IntGetStatus(GPDMA_STAT_INTERR, DMA_RX_CHANNEL) || GPDMA_IntGetStatus(GPDMA_STAT_INTERR, 1))
     {
         while (1);
     }
