@@ -50,3 +50,15 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# MCU specific files
+Debug
+.cproject
+.project
+*.xml
+*/crp.c
+*/cr_startup_lpc*
+*.prefs
+*.launch
+
+.vscode
