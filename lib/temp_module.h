@@ -11,13 +11,22 @@
 // Define the frequency of the ADC
 #define FREQ_ADC 200000
 
+/**
+ * @brief Inicializa el módulo del lector de temperatura
+ */
 void init_temp_module();
-// Configure the ADC with a frequency of FREQ_ADC
-void configure_adc();
-// Initialize the ADC
-void start_adc();
-// Configure the SysTick timer with a period of SYSTICK_PERIOD ms
+
+/**
+ * @brief Configura el SysTick timer para que interrumpa cada SYSTICK_PERIOD ms
+ */
 void configure_systick();
 
-void SysTick_Handler(void);
-void ADC_IRQHandler(void);
+/**
+ * @brief Configura el ADC a 200 kHz
+ */
+void configure_adc();
+
+/**
+ * @brief Comienza una nueva conversión del ADC
+ */
+void start_adc();
