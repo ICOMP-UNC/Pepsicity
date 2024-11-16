@@ -16,7 +16,7 @@
 #include "lpc17xx_timer.h"
 #include "lpc17xx_uart.h"
 
-#include "../lib/motor_control.h"
+#include "../inc/motor_control.h"
 
 void configure_pins(void)
 {
