@@ -78,6 +78,11 @@ void check_object(void)
         if (detection_flag)
         {
             object_count++;
+
+            // check operation mode
+            // if (operation_mode == mode a) -> send object count through UART
+            // if (operation_mode == mode c) -> send object count when it reaches a certain value
+
             turn_on_led();
         }
 
@@ -86,10 +91,15 @@ void check_object(void)
     }
 }
 
-void start_counting_subsystem(void)
+void init_counting_module(void)
 {
     config_timer();            // Configure the timer
     TIM_Cmd(LPC_TIM2, ENABLE); // Start Timer2
+}
+
+void stop_counting_module(void)
+{
+    TIM_Cmd(LPC_TIM2, DISABLE); // Stop Timer2
 }
 
 /**

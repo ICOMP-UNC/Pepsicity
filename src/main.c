@@ -7,16 +7,6 @@
 #include "LPC17xx.h"
 #endif
 
-#include "lpc17xx_adc.h"
-#include "lpc17xx_dac.h"
-#include "lpc17xx_exti.h"
-#include "lpc17xx_gpdma.h"
-#include "lpc17xx_gpio.h"
-#include "lpc17xx_pinsel.h"
-#include "lpc17xx_systick.h"
-#include "lpc17xx_timer.h"
-#include "lpc17xx_uart.h"
-
 #include "../inc/configure_pins.h"
 #include "../inc/counting_module.h"
 
@@ -29,6 +19,7 @@ void EINT0_IRQHandler(void)
     EXTI_ClearEXTIFlag(EXTI_EINT0);
 
     // start the system
+    init_counting_module(); // Initialize the counting module
 }
 
 /**
@@ -40,6 +31,7 @@ void EINT1_IRQHandler(void)
     EXTI_ClearEXTIFlag(EXTI_EINT1);
 
     // stop the system
+    stop_counting_module(); // Stop the counting module
 }
 
 /**
@@ -51,9 +43,9 @@ int main(void)
 {
     SystemInit(); // Initialize the system
 
-    configure_pins();
+    configure_pins(); // Configure the pins
 
-    start_counting_subsystem(); // Start the counting subsystem
+    configure_interrupts(); // Configure the interrupts
 
     while (1)
     {

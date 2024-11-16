@@ -43,15 +43,15 @@
 #define MATCH_CHANNEL_2 2     /**< Match channel 2 */
 #define CAPTURE_CHANNEL 0     /**< Capture channel 0 */
 
-/**
+/*
  * Global Variables
  */
 static uint32_t max_time =
     2270; /**< Maximum time for the echo signal (DISTANCE - SAFE_MARGIN) * 2 / SPEED_OF_SOUND * 1000000;*/
-static uint32_t echo_up_time = 470;     /**< Time when the echo signal is up */
-static uint32_t echo_down_time = 0;     /**< Time when the echo signal is down */
-static uint32_t object_count = 0;       /**< Count of objects detected */
-static uint16_t detection_flag = FALSE; /**< Flag to check if an object is being detected */
+static uint32_t echo_up_time;   /**< Time when the echo signal is up */
+static uint32_t echo_down_time; /**< Time when the echo signal is down */
+static uint32_t object_count;   /**< Count of objects detected */
+static uint16_t detection_flag; /**< Flag to check if an object is being detected */
 
 /**
  * @brief Configures the timer.
@@ -86,6 +86,13 @@ void turn_off_led(void);
  *
  * This function starts the counting subsystem.
  */
-void start_counting_subsystem(void);
+void init_counting_module(void);
+
+/**
+ * @brief Stops the counting subsystem.
+ *
+ * This function stops the counting subsystem.
+ */
+void stop_counting_module(void);
 
 #endif
