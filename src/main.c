@@ -39,9 +39,9 @@ void EINT1_IRQHandler(void)
  */
 int main(void)
 {
-    SystemInit();         // Initialize the system
-    configure_pins();     // Configure the pins
-    init_communication(); // Initialize the communication
+    SystemInit();           // Initialize the system
+    configure_pins();       // Configure the pins
+    init_communication();   // Initialize the communication
     configure_interrupts(); // Configure the interrupts
 
     while (1)
