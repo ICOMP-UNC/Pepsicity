@@ -7,7 +7,7 @@
 
 #include "../inc/temp_module.h"
 
-uint16_t adc_value = 0;
+uint16_t adc_value = 0; /**< Last ADC conversion value */
 
 void init_temp_module()
 {
