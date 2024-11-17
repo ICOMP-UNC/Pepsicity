@@ -7,12 +7,9 @@
 SRCS =	newlib_stubs.c \
 		system_LPC17xx.c \
 		main.c \
-<<<<<<< HEAD
-		motor_control.c \
-=======
-		configure_pins.c 
+		configure_pins.c \
+		motor_control.c 
 		
->>>>>>> develop
  
 	 
 # Define the name of the project

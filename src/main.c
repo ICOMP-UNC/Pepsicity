@@ -20,6 +20,7 @@ void EINT0_IRQHandler(void)
     EXTI_ClearEXTIFlag(EXTI_EINT0);
 
     // start the system
+    config_dac();   /**< Initialize DAC */
 }
 
 /**
@@ -35,16 +36,15 @@ void EINT1_IRQHandler(void)
 
 int main()
 {
-	config_dac();
+	SystemInit(); // Initialize the system
 
     configure_pins(); // Configure the pins
 
     configure_interrupts(); // Configure the interrupts
-    
-    set_motor_speed(0);
 
     while (1)
-        {
-            __asm("nop");
-        }
+    {
+    }
+
+    return 0; // Should never reach this
 }
