@@ -1,4 +1,11 @@
-#include "../lib/temp_module.h"
+/**
+ * @file temp_module.c
+ * @brief Module for the temperature sensor
+ * 
+ * This file contains the implementation of the temperature sensor module.
+ */
+
+#include "../inc/temp_module.h"
 
 uint16_t adc_value = 0;
 
