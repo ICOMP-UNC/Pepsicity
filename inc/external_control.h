@@ -32,18 +32,18 @@ void validate_command(uint8_t* command);
  * @brief In case of receiving a new mode, it interprets the mode and executes the corresponding action, only in
  * CHANGE_MODE_STATUS
  */
-void validate_new_mode(uint8_t* mode);
+void validate_new_mode(uint8_t* new_mode);
 
 /**
  * @brief In case of receiving a new velocity, it interprets the velocity and executes the corresponding action, only in
  * VELOCITY_STATUS
  */
-void validate_new_velocity(uint8_t* velocity);
+void validate_new_velocity(uint8_t* new_velocity);
 
 /**
  * @brief In case of receiving a new counter, it interprets the counter and executes the corresponding action, only in
  * COUNTER_STATUS
  */
-void validate_new_counter(uint8_t* counter);
+void validate_new_counter(uint8_t* new_counter);
 
 #endif

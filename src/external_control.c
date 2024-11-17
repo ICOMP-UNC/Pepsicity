@@ -116,9 +116,9 @@ void validate_new_mode(uint8_t* new_mode)
     }
 }
 
-void validate_new_velocity(uint8_t* velocity)
+void validate_new_velocity(uint8_t* new_velocity)
 {
-    uint16_t velocity = get_decimal_data(velocity);
+    uint16_t velocity = get_decimal_data(new_velocity);
     if (velocity >= 1 && velocity <= 10)
     {
         // TODO implementar cambio de velocidad
@@ -136,9 +136,9 @@ void validate_new_velocity(uint8_t* velocity)
     }
 }
 
-void validate_new_counter(uint8_t* counter)
+void validate_new_counter(uint8_t* new_counter)
 {
-    match_counter = get_decimal_data(counter);
+    match_counter = get_decimal_data(new_counter);
     if (match_counter<1000 | match_counter> 0)
     {
         char message[] = "\n\rCantidad de objetos a contar cambiada\n\rIngrese un nuevo comando\n\r";
