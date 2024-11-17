@@ -24,6 +24,21 @@ void configure_pins(void)
     PinCfg.Pinnum = PINSEL_PIN_11;
 
     PINSEL_ConfigPin(&PinCfg);
+
+    // UART2_TXD
+    PinCfg.Portnum = PINSEL_PORT_0;
+    PinCfg.Pinnum = PINSEL_PIN_10;
+    PinCfg.Funcnum = PINSEL_FUNC_1;
+    PinCfg.Pinmode = PINSEL_PINMODE_PULLUP;
+
+    PINSEL_ConfigPin(&PinCfg);
+
+    // UART2_RXD
+    PinCfg.Pinnum = PINSEL_PIN_11;
+    PinCfg.Funcnum = PINSEL_FUNC_1;
+    PinCfg.Pinmode = PINSEL_PINMODE_TRISTATE;
+
+    PINSEL_ConfigPin(&PinCfg);
 }
 
 void configure_interrupts(void)

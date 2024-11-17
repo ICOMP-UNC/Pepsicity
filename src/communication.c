@@ -101,15 +101,6 @@ void decimal_to_string(uint16_t data, char* buffer, uint8_t digits)
     }
 }
 
-void decimal_to_string(uint16_t data, char* buffer, uint8_t digits)
-{
-    for (uint8_t i = 0; i < digits; i++)
-    {
-        buffer[digits - 1 - i] = (data % 10) + '0'; // Extracts the least significant digit and converts it to character
-        data /= 10;                                 // Removes the least significant digit
-    }
-}
-
 void restart_rx_uart(uint32_t size_message)
 {
     GPDMACfg_RX.TransferSize = size_message;
