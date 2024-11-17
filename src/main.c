@@ -7,7 +7,6 @@
 #include "LPC17xx.h"
 #endif
 
-
 #include "../inc/configure_pins.h"
 #include "../inc/motor_control.h"
 
@@ -20,7 +19,7 @@ void EINT0_IRQHandler(void)
     EXTI_ClearEXTIFlag(EXTI_EINT0);
 
     // start the system
-    config_dac();   /**< Initialize DAC */
+    config_dac(); /**< Initialize DAC */
 }
 
 /**
@@ -36,7 +35,7 @@ void EINT1_IRQHandler(void)
 
 int main()
 {
-	SystemInit(); // Initialize the system
+    SystemInit(); // Initialize the system
 
     configure_pins(); // Configure the pins
 
