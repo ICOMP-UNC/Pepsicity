@@ -7,7 +7,7 @@
 #include "LPC17xx.h"
 #endif
 
-#include "../lib/communication.h"
+#include "../inc/communication.h"
 #include "lpc17xx_adc.h"
 #include "lpc17xx_dac.h"
 #include "lpc17xx_exti.h"
@@ -16,8 +16,6 @@
 #include "lpc17xx_systick.h"
 #include "lpc17xx_timer.h"
 #include "lpc17xx_uart.h"
-#include "lpc17xx_gpdma.h"
-
 
 void configure_pins(void)
 {
@@ -67,8 +65,8 @@ void EINT1_IRQHandler(void)
  */
 int main(void)
 {
-    SystemInit(); // Initialize the system
-    configure_pins(); // Configure the pins
+    SystemInit();         // Initialize the system
+    configure_pins();     // Configure the pins
     init_communication(); // Initialize the communication
 
     configure_pins(); // Configure the pins

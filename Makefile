@@ -7,7 +7,9 @@
 SRCS =	newlib_stubs.c \
 		system_LPC17xx.c \
 		main.c \
-		configure_pins.c 
+		configure_pins.c \
+		communication.c \
+		external_control.c 
 		
  
 	 

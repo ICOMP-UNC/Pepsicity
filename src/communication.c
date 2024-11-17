@@ -1,9 +1,17 @@
-#include "../lib/communication.h"
+/**
+ * @file communication.c
+ * @brief File for communication functions
+ *
+ * This file contains the implementation of the functions that handle the communication
+ */
 
-uint8_t data_Rx[RX_BUFF_SIZE];
-uint8_t data_Tx[TX_BUFF_SIZE];
-EXTERNAL_CONTROL_STATUS control_status = IDLE_STATUS;
+#include "../inc/communication.h"
 
+uint8_t data_Rx[RX_BUFF_SIZE];                        /**< Buffer for UART reception */
+uint8_t data_Tx[TX_BUFF_SIZE];                        /**< Buffer for UART transmission */
+EXTERNAL_CONTROL_STATUS control_status = IDLE_STATUS; /**< Communication status */
+
+/** Configuration structure for the DMA RX channel */
 GPDMA_Channel_CFG_Type GPDMACfg_RX = {
     DMA_RX_CHANNEL,         // ChannelNum
     RX_BUFF_SIZE,           // TransferSize
@@ -16,6 +24,7 @@ GPDMA_Channel_CFG_Type GPDMACfg_RX = {
     (uint32_t)NULL          // DMALLI
 };
 
+/** Configuration structure for the DMA TX channel */
 GPDMA_Channel_CFG_Type GPDMACfg_TX = {
     DMA_TX_CHANNEL,                // ChannelNum
     TX_BUFF_SIZE,                  // TransferSize
@@ -63,7 +72,7 @@ void init_dma()
     GPDMA_Setup(&GPDMACfg_TX);
     GPDMA_ClearIntPending(GPDMA_STATCLR_INTTC, DMA_TX_CHANNEL);
     GPDMA_ChannelCmd(DMA_TX_CHANNEL, DISABLE);
-    // Deshabilitar la interrupción de transferencia
+    // Disable the transfer interrupt
     LPC_GPDMACH1->DMACCConfig &= ~(1 << 31);
 
     NVIC_EnableIRQ(DMA_IRQn);
@@ -87,8 +96,17 @@ void decimal_to_string(uint16_t data, char* buffer, uint8_t digits)
 {
     for (uint8_t i = 0; i < digits; i++)
     {
-        buffer[digits - 1 - i] = (data % 10) + '0'; // Extrae el dígito menos significativo y lo convierte a carácter
-        data /= 10;                                 // Elimina el dígito menos significativo
+        buffer[digits - 1 - i] = (data % 10) + '0';
+        data /= 10;
+    }
+}
+
+void decimal_to_string(uint16_t data, char* buffer, uint8_t digits)
+{
+    for (uint8_t i = 0; i < digits; i++)
+    {
+        buffer[digits - 1 - i] = (data % 10) + '0'; // Extracts the least significant digit and converts it to character
+        data /= 10;                                 // Removes the least significant digit
     }
 }
 
@@ -99,96 +117,21 @@ void restart_rx_uart(uint32_t size_message)
     GPDMA_ChannelCmd(DMA_RX_CHANNEL, ENABLE);
 }
 
-void validate_command()
+void received_data_interpretation()
 {
     switch (control_status)
     {
-        case IDLE_STATUS:
-            switch (data_Rx[0])
-            {
-                case 'M':
-                {
-                    control_status = CHANGE_MODE_STATUS;
-                    char message[] = "\n\rPor favor, ingrese el modo deseado: A, B o C\n\r";
-                    send_data_dma_uart(message, sizeof(message));
-                    restart_rx_uart(1);
-                }
-                break;
-                case 'V':
-                {
-                    control_status = VELOCITY_STATUS;
-                    char message[] = "\n\rIngrese la velocidad de 01 a 10\n\r";
-                    send_data_dma_uart(message, sizeof(message));
-                    restart_rx_uart(2);
-                }
-                break;
-                case 'T':
-                {
-                    control_status = TEMPERATURE_STATUS;
-                    char message[50] = "\n\rEl valor de la temperaturas es:";
-                    int a = 54;
-                    char num[3];
-                    decimal_to_string(a, num, 2);
-                    num[2] = '\0';
-                    strcat(message, num);
-                    send_data_dma_uart(message, sizeof(message));
-                    restart_rx_uart(1);
-                    control_status = IDLE_STATUS;
-                }
-                break;
-                case 'C':
-                {
-                    control_status = COUNTER_STATUS;
-                    char message[] = "\n\rIngrese el valor del contador de 000 a 999\n\r";
-                    send_data_dma_uart(message, sizeof(message));
-                    restart_rx_uart(1);
-                    control_status = IDLE_STATUS;
-                }
-                default:
-                {
-                    char message[] = "\n\rComando no valido, por favor ingrese M,V,C o T\n\r";
-                    send_data_dma_uart(message, sizeof(message));
-                    restart_rx_uart(1);
-                }
-                break;
-            }
-            break;
-        case CHANGE_MODE_STATUS:
-            switch (data_Rx[0])
-            {
-                case MODE_A:
-                {
-                    char message[] = "\n\rModo A seleccionado\n\r";
-                    send_data_dma_uart(message, sizeof(message));
-                    control_status = IDLE_STATUS;
-                    restart_rx_uart(1);
-                }
-                break;
-                case MODE_B:
-                {
-                    char message[] = "\n\rModo B seleccionado\n\r";
-                    send_data_dma_uart(message, sizeof(message));
-                    control_status = IDLE_STATUS;
-                    restart_rx_uart(1);
-                }
-                break;
-                case MODE_C:
-                {
-                    char message[] = "\n\rModo C seleccionado\n\r";
-                    send_data_dma_uart(message, sizeof(message));
-                    control_status = IDLE_STATUS;
-                    restart_rx_uart(1);
-                } break;
-                default:
-                {
-                    char message[] = "\n\rModo no valido, por favor ingrese A, B o C\n\r";
-                    send_data_dma_uart(message, sizeof(message));
-                    restart_rx_uart(1);
-                }
-                break;
-            }
-            break;
-        default: break;
+        case IDLE_STATUS: validate_command(data_Rx); break;
+        case CHANGE_MODE_STATUS: validate_new_mode(data_Rx); break;
+        case VELOCITY_STATUS: validate_new_velocity(data_Rx); break;
+        case COUNTER_STATUS: validate_new_counter(data_Rx); break;
+        default:
+        {
+            char message[] = "\n\rNo tendrías que poder ver esto, fuera de aquí\n\r";
+            send_data_dma_uart(message, sizeof(message));
+            restart_rx_uart(1);
+        }
+        break;
     }
 }
 
@@ -202,6 +145,7 @@ void DMA_IRQHandler()
     }
     else if (GPDMA_IntGetStatus(GPDMA_STAT_INTERR, DMA_RX_CHANNEL) || GPDMA_IntGetStatus(GPDMA_STAT_INTERR, 1))
     {
-        while (1);
+        while (1)
+            ;
     }
 }
