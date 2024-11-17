@@ -1,7 +1,7 @@
 /**
  * @file temp_module.c
  * @brief Module for the temperature sensor
- * 
+ *
  * This file contains the implementation of the temperature sensor module.
  */
 
@@ -35,7 +35,6 @@ void configure_systick()
     SYSTICK_IntCmd(ENABLE);
     SYSTICK_Cmd(ENABLE);
     NVIC_SetPriority(SysTick_IRQn, 0);
-
 }
 
 void SysTick_Handler(void)
@@ -47,5 +46,5 @@ void SysTick_Handler(void)
 void ADC_IRQHandler(void)
 {
     adc_value = ADC_ChannelGetData(LPC_ADC, 0);
-    ADC_GlobalGetData(LPC_ADC);// Clear the interrupt
+    ADC_GlobalGetData(LPC_ADC); // Clear the interrupt
 }
