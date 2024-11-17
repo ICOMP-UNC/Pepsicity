@@ -141,7 +141,7 @@ void DMA_IRQHandler()
     {
         GPDMA_ClearIntPending(GPDMA_STATCLR_INTTC, DMA_RX_CHANNEL);
 
-        validate_command();
+        received_data_interpretation();
     }
     else if (GPDMA_IntGetStatus(GPDMA_STAT_INTERR, DMA_RX_CHANNEL) || GPDMA_IntGetStatus(GPDMA_STAT_INTERR, 1))
     {

@@ -82,4 +82,9 @@ void decimal_to_string(uint16_t data, char* buffer, uint8_t digits);
  */
 void received_data_interpretation();
 
+/**
+ * @brief DMA interrupt handler
+ */
+void DMA_IRQHandler();
+
 #endif
