@@ -33,6 +33,9 @@ void EINT1_IRQHandler(void)
     // stop the system
 }
 
+/**
+ * @brief main function
+ */
 int main()
 {
     SystemInit(); // Initialize the system
