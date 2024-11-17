@@ -5,7 +5,7 @@
  * This file contains the implementation of the functions that handle the external control
  */
 
-#include "external_control.h"
+#include "../inc/external_control.h"
 
 MODES mode = MODE_A;
 uint8_t send_available = TRUE;
@@ -49,7 +49,7 @@ void validate_command(uint8_t* command)
             {
                 char message[70] = "\n\rSe ah contabilizado:";
                 // TODO implementar contador
-                strcat(message, "°C\n\rIngrese un nuevo comando\n\r");
+                strcat(message, "\n\rIngrese un nuevo comando\n\r");
                 send_data_dma_uart(message, sizeof(message));
                 restart_rx_uart(1);
                 control_status = IDLE_STATUS;
@@ -62,6 +62,7 @@ void validate_command(uint8_t* command)
                 restart_rx_uart(1);
             }
         }
+        break;
         default:
         {
             char message[] = "\n\rComando no valido, por favor ingrese M,V,C o T\n\r";

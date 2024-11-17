@@ -8,8 +8,8 @@
 #ifndef COMMUNICATION_H
 #define COMMUNICATION_H
 
-#include "lpc17xx_gpdma.h"
-#include "lpc17xx_uart.h"
+#include "../lib/CMSISv2p00_LPC17xx/drivers/include/lpc17xx_gpdma.h"
+#include "../lib/CMSISv2p00_LPC17xx/drivers/include/lpc17xx_uart.h"
 #include "string.h"
 #include <stdlib.h>
 
