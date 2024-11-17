@@ -7,7 +7,12 @@
 SRCS =	newlib_stubs.c \
 		system_LPC17xx.c \
 		main.c \
+<<<<<<< HEAD
 		motor_control.c \
+=======
+		configure_pins.c 
+		
+>>>>>>> develop
  
 	 
 # Define the name of the project
@@ -63,7 +68,7 @@ vpath %.c src
 vpath %.c $(ROOT)/lib/CMSISv2p00_LPC17xx/src 
 vpath %.c $(ROOT)/lib/CMSISv2p00_LPC17xx/drivers/src
 
-CFLAGS += -I$(ROOT)/include 
+CFLAGS += -I$(ROOT)/inc
 CFLAGS += -I$(ROOT)/lib/CMSISv2p00_LPC17xx/include
 CFLAGS += -I$(ROOT)/lib/CMSISv2p00_LPC17xx/drivers/include
 
