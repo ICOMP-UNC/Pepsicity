@@ -26,6 +26,8 @@
 #define BASE_10            10  /**< The base of the number system used for conversion */
 #define MAX_VELOCITY       10  /**< Maximum allowable speed value */
 #define MIN_VELOCITY       10  /**< Minimum allowable speed value */
+#define MAX_COUNTER        1000/**< Maximum allowable counter value */
+#define MIN_COUNTER        0   /**< Minimum allowable counter value*/
 #define SIZE_MESSAGE       1   /**< Size of data to receive */
 
 /** Types of communication states*/

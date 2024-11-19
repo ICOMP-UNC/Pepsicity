@@ -139,7 +139,7 @@ void validate_new_velocity()
 void validate_new_counter()
 {
     match_counter = get_decimal_data(data_Rx);
-    if (match_counter < 1000 && match_counter > 0) // TODO cambiar valores definidos en counting module
+    if (match_counter < MAX_COUNTER && match_counter > MIN_COUNTER) // TODO cambiar valores definidos en counting module
     {
         char message[] = "\n\rCantidad de objetos a contar cambiada\n\rIngrese un nuevo comando\n\r";
         send_data_dma_uart(message, sizeof(message));
