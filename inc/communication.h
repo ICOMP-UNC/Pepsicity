@@ -23,6 +23,10 @@
 #define RX_BUFF_SIZE_3     3   /**< Number of characters expected via UART */
 #define RX_BUFF_SIZE_2     2   /**< Number of characters expected via UART */
 #define RX_BUFF_SIZE_1     1   /**< Number of characters expected via UART */
+#define BASE_10            10  /**< The base of the number system used for conversion */
+#define MAX_VELOCITY       10  /**< Maximum allowable speed value */
+#define MIN_VELOCITY       10  /**< Minimum allowable speed value */
+#define SIZE_MESSAGE       1   /**< Size of data to receive */
 
 /** Types of communication states*/
 typedef enum

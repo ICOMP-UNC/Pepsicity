@@ -119,7 +119,7 @@ void validate_new_mode()
 void validate_new_velocity()
 {
     uint16_t velocity = get_decimal_data(data_Rx);
-    if (velocity >= 1 && velocity <= 10) // TODO cambiar valores definidos en motor control
+    if (velocity >= MIN_VELOCITY && velocity <= MAX_VELOCITY) // TODO cambiar valores definidos en motor control
     {
         // TODO implementar cambio de velocidad
         control_status = IDLE_STATUS;
@@ -150,7 +150,7 @@ void validate_new_counter()
     }
     else
     {
-        char message[] = "\n\rCantidad de objetos no valida, por favor ingrese un valor entre 001 y 999\n\r";
+        char message[] = "\n\rCantidad de objetos no valida. Por favor, ingrese un valor entre 001 y 999\n\r";
         send_data_dma_uart(message, sizeof(message));
         restart_rx_uart(RX_BUFF_SIZE_3);
     }

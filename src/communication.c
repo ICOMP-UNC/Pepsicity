@@ -44,7 +44,7 @@ void init_communication()
     char message[] = "\n\rBienvendo a Pepsicity.\n\rPuede cambiar el funcionamiento con M, o la velocidad con V y "
                      "solicitar el valor de temperatura T\n\r";
     send_data_dma_uart(message, sizeof(message));
-    restart_rx_uart(1);
+    restart_rx_uart(SIZE_MESSAGE);
 }
 
 void configure_uart()
@@ -89,15 +89,15 @@ void send_data_dma_uart(const char* data, uint32_t size)
 
 uint16_t get_decimal_data(uint8_t* data)
 {
-    return (uint16_t)strtol((char*)data, NULL, 10);
+    return (uint16_t)strtol((char*)data, NULL, BASE_10);
 }
 
 void decimal_to_string(uint16_t data, char* buffer, uint8_t digits)
 {
-    for (uint8_t i = 0; i < digits; i++)
+    for (uint8_t digit = 0; digit < digits; i++)
     {
-        buffer[digits - 1 - i] = (data % 10) + '0';
-        data /= 10;
+        buffer[digits - 1 - digit] = (data % BASE_10) + '0';
+        data /= BASE_10;
     }
 }
 
@@ -120,7 +120,7 @@ void received_data_interpretation()
         {
             char message[] = "\n\rNo tendrías que poder ver esto, fuera de aquí\n\r";
             send_data_dma_uart(message, sizeof(message));
-            restart_rx_uart(1);
+            restart_rx_uart(SIZE_MESSAGE);
         }
         break;
             memset(data_Rx, '\0', RX_BUFF_SIZE);
