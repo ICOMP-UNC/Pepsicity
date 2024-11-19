@@ -112,10 +112,10 @@ void received_data_interpretation()
 {
     switch (control_status)
     {
-        case IDLE_STATUS: validate_command(data_Rx); break;
-        case CHANGE_MODE_STATUS: validate_new_mode(data_Rx); break;
-        case VELOCITY_STATUS: validate_new_velocity(data_Rx); break;
-        case COUNTER_STATUS: validate_new_counter(data_Rx); break;
+        case IDLE_STATUS: validate_command(); break;
+        case CHANGE_MODE_STATUS: validate_new_mode(); break;
+        case VELOCITY_STATUS: validate_new_velocity(); break;
+        case COUNTER_STATUS: validate_new_counter(); break;
         default:
         {
             char message[] = "\n\rNo tendrías que poder ver esto, fuera de aquí\n\r";
@@ -123,6 +123,7 @@ void received_data_interpretation()
             restart_rx_uart(1);
         }
         break;
+            memset(data_Rx, '\0', RX_BUFF_SIZE);
     }
 }
 
@@ -134,7 +135,8 @@ void DMA_IRQHandler()
 
         received_data_interpretation();
     }
-    else if (GPDMA_IntGetStatus(GPDMA_STAT_INTERR, DMA_RX_CHANNEL) || GPDMA_IntGetStatus(GPDMA_STAT_INTERR, 1))
+    else if (GPDMA_IntGetStatus(GPDMA_STAT_INTERR, DMA_RX_CHANNEL) ||
+             GPDMA_IntGetStatus(GPDMA_STAT_INTERR, DMA_TX_CHANNEL))
     {
         while (1)
             ;

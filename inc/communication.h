@@ -15,10 +15,14 @@
 
 #include "external_control.h"
 
-#define DMA_RX_CHANNEL 0   /**< DMA channel for using RX via UART */
-#define DMA_TX_CHANNEL 1   /**< DMA channel for using TX via UART */
-#define RX_BUFF_SIZE   1   /**< Number of characters expected via UART */
-#define TX_BUFF_SIZE   300 /**< Maximum number of characters to send via UART */
+#define DMA_RX_CHANNEL     0   /**< DMA channel for using RX via UART */
+#define DMA_TX_CHANNEL     1   /**< DMA channel for using TX via UART */
+#define RX_BUFF_SIZE       3   /**< Number of characters expected via UART */
+#define TX_BUFF_SIZE       300 /**< Maximum number of characters to send via UART */
+#define STANDARD_MESS_SIZE 70  /**< Standard message size */
+#define RX_BUFF_SIZE_3     3   /**< Number of characters expected via UART */
+#define RX_BUFF_SIZE_2     2   /**< Number of characters expected via UART */
+#define RX_BUFF_SIZE_1     1   /**< Number of characters expected via UART */
 
 /** Types of communication states*/
 typedef enum

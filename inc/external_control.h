@@ -26,24 +26,24 @@ extern uint16_t match_counter; /**< Counter to match the system stop condition *
  * @brief In case of receiving a command, it interprets the command and executes the corresponding action, only in
  * IDLE_STATUS
  */
-void validate_command(uint8_t* command);
+void validate_command();
 
 /**
  * @brief In case of receiving a new mode, it interprets the mode and executes the corresponding action, only in
  * CHANGE_MODE_STATUS
  */
-void validate_new_mode(uint8_t* new_mode);
+void validate_new_mode();
 
 /**
  * @brief In case of receiving a new velocity, it interprets the velocity and executes the corresponding action, only in
  * VELOCITY_STATUS
  */
-void validate_new_velocity(uint8_t* new_velocity);
+void validate_new_velocity();
 
 /**
  * @brief In case of receiving a new counter, it interprets the counter and executes the corresponding action, only in
  * COUNTER_STATUS
  */
-void validate_new_counter(uint8_t* new_counter);
+void validate_new_counter();
 
 #endif
