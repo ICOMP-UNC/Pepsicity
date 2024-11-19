@@ -58,6 +58,21 @@ void configure_pins(void)
 
     PINSEL_ConfigPin(&PinCfg);
 
+    // UART2_TXD
+    PinCfg.Portnum = PINSEL_PORT_0;
+    PinCfg.Pinnum = PINSEL_PIN_10;
+    PinCfg.Funcnum = PINSEL_FUNC_1;
+    PinCfg.Pinmode = PINSEL_PINMODE_PULLUP;
+
+    PINSEL_ConfigPin(&PinCfg);
+
+    // UART2_RXD
+    PinCfg.Pinnum = PINSEL_PIN_11;
+    PinCfg.Funcnum = PINSEL_FUNC_1;
+    PinCfg.Pinmode = PINSEL_PINMODE_TRISTATE;
+
+    PINSEL_ConfigPin(&PinCfg);
+  
     // Set the TRIGGER pin as output
     GPIO_SetDir(PINSEL_PORT_0, TRIGGER_PIN, OUTPUT);
 

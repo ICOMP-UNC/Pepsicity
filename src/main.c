@@ -7,6 +7,7 @@
 #include "LPC17xx.h"
 #endif
 
+#include "../inc/communication.h"
 #include "../inc/configure_pins.h"
 #include "../inc/counting_module.h"
 #include "../inc/motor_control.h"
@@ -42,10 +43,10 @@ void EINT1_IRQHandler(void)
  */
 int main()
 {
-    SystemInit();       // Initialize the system
-    init_temp_module(); // Initialize the temperature module
-    configure_pins();   // Configure the pins
-
+    SystemInit();           // Initialize the system
+    configure_pins();       // Configure the pins
+    init_communication();   // Initialize the communication
+    init_temp_module();     // Initialize the temperature module
     configure_interrupts(); // Configure the interrupts
 
     while (1)
