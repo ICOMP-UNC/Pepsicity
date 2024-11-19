@@ -8,7 +8,9 @@
 #endif
 
 #include "../inc/configure_pins.h"
+#include "../inc/motor_control.h"
 #include "../inc/temp_module.h"
+
 
 /**
  * @brief EINT0 interrupt handler
@@ -19,6 +21,7 @@ void EINT0_IRQHandler(void)
     EXTI_ClearEXTIFlag(EXTI_EINT0);
 
     // start the system
+    config_dac(); /**< Initialize DAC */
 }
 
 /**
@@ -33,11 +36,9 @@ void EINT1_IRQHandler(void)
 }
 
 /**
- * @brief Main function for the project.
- *
- * This function initializes the system and starts the SysTick timer.
+ * @brief main function
  */
-int main(void)
+int main()
 {
     SystemInit();       // Initialize the system
     init_temp_module(); // Initialize the temperature module
