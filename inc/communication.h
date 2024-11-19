@@ -13,22 +13,16 @@
 #include "string.h"
 #include <stdlib.h>
 
-#include "external_control.h"
-
-#define DMA_RX_CHANNEL     0    /**< DMA channel for using RX via UART */
-#define DMA_TX_CHANNEL     1    /**< DMA channel for using TX via UART */
-#define RX_BUFF_SIZE       3    /**< Number of characters expected via UART */
-#define TX_BUFF_SIZE       300  /**< Maximum number of characters to send via UART */
-#define STANDARD_MESS_SIZE 70   /**< Standard message size */
-#define RX_BUFF_SIZE_3     3    /**< Number of characters expected via UART */
-#define RX_BUFF_SIZE_2     2    /**< Number of characters expected via UART */
-#define RX_BUFF_SIZE_1     1    /**< Number of characters expected via UART */
-#define BASE_10            10   /**< The base of the number system used for conversion */
-#define MAX_VELOCITY       10   /**< Maximum allowable speed value */
-#define MIN_VELOCITY       10   /**< Minimum allowable speed value */
-#define MAX_COUNTER        1000 /**< Maximum allowable counter value */
-#define MIN_COUNTER        0    /**< Minimum allowable counter value*/
-#define SIZE_MESSAGE       1    /**< Size of data to receive */
+#define DMA_RX_CHANNEL     0                     /**< DMA channel for using RX via UART */
+#define DMA_TX_CHANNEL     1                     /**< DMA channel for using TX via UART */
+#define RX_BUFF_SIZE       3                     /**< Number of characters expected via UART */
+#define TX_BUFF_SIZE       300                   /**< Maximum number of characters to send via UART */
+#define STANDARD_MESS_SIZE 70                    /**< Standard message size */
+#define BUFF_SIZE_3        3                     /**< Number of characters for buffer */
+#define BUFF_SIZE_2        2                     /**< Number of characters for buffer */
+#define BUFF_SIZE_1        1                     /**< Number of characters for buffer */
+#define BASE_10            10                    /**< The base of the number system used for conversion */
+#define TX_INT             ((uint32_t)(1 << 31)) /**< TX interrupt */
 
 /** Types of communication states*/
 typedef enum
@@ -59,7 +53,8 @@ void configure_uart();
 void init_dma();
 
 /**
- * @brief Validates the command received via UART
+ * @brief Restarts the DMA channel for receiving data via UART
+ * @param size_message Size of the message to receive
  */
 void restart_rx_uart(uint32_t size_message);
 
@@ -86,6 +81,14 @@ uint16_t get_decimal_data(uint8_t* data);
  * @param digits Number of digits of the decimal number
  */
 void decimal_to_string(uint16_t data, char* buffer, uint8_t digits);
+
+/**
+ * @brief Concatenates a decimal number to a message
+ * @param data Decimal number
+ * @param message_dest String to concatenate
+ * @param digits Number of digits of the decimal number
+ */
+void concat_decimal_to_string(uint16_t data, char* message_dest, uint8_t digits);
 
 /**
  * @brief Interpretation of the message received by the UART receiver, based on the current state

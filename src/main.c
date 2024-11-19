@@ -20,10 +20,11 @@ void EINT0_IRQHandler(void)
 {
     // Clear the interrupt
     EXTI_ClearEXTIFlag(EXTI_EINT0);
-
     // start the system
+    init_communication();   // Initialize the communication
+    init_temp_module();     // Initialize the temperature module
+    config_dac();           // Initialize the DAC
     init_counting_module(); // Initialize the counting module
-    config_dac();           /**< Initialize DAC */
 }
 
 /**
@@ -35,7 +36,12 @@ void EINT1_IRQHandler(void)
     EXTI_ClearEXTIFlag(EXTI_EINT1);
 
     // stop the system
-    stop_counting_module(); // Stop the counting module
+    stop_counting_module();                    // Stop the counting module
+    set_motor_speed(STOP_MOTOR_VAL);           // Stop the motor
+    GPDMA_ChannelCmd(DMA_RX_CHANNEL, DISABLE); // Disable the RX channel
+
+    char message[] = "\n\rSistema detenido\n\r";
+    send_data_dma_uart(message, sizeof(message));
 }
 
 /**
@@ -45,11 +51,9 @@ int main()
 {
     SystemInit();           // Initialize the system
     configure_pins();       // Configure the pins
-    init_communication();   // Initialize the communication
-    init_temp_module();     // Initialize the temperature module
     configure_interrupts(); // Configure the interrupts
 
-    while (1)
+    while (TRUE)
     {
     }
 

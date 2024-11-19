@@ -15,6 +15,9 @@
 #include "../lib/CMSISv2p00_LPC17xx/drivers/include/lpc17xx_timer.h"
 #include "configure_pins.h"
 
+#include "communication.h"
+#include "external_control.h"
+
 /**
  * Booleans
  */
@@ -41,17 +44,20 @@
 #define MATCH_CHANNEL_0 0     /**< Match channel 0 */
 #define MATCH_CHANNEL_1 1     /**< Match channel 1 */
 #define MATCH_CHANNEL_2 2     /**< Match channel 2 */
+#define MAX_COUNTER     1000  /**< Maximum allowable counter value */
+#define MIN_COUNTER     0     /**< Minimum allowable counter value*/
 #define CAPTURE_CHANNEL 0     /**< Capture channel 0 */
+#define UP_STATIC_TIME  470   /**< Time when the echo signal is up */
 
 /*
  * Global Variables
  */
 static uint32_t max_time =
     2270; /**< Maximum time for the echo signal (DISTANCE - SAFE_MARGIN) * 2 / SPEED_OF_SOUND * 1000000;*/
-static uint32_t echo_up_time;   /**< Time when the echo signal is up */
-static uint32_t echo_down_time; /**< Time when the echo signal is down */
-static uint32_t object_count;   /**< Count of objects detected */
-static uint16_t detection_flag; /**< Flag to check if an object is being detected */
+extern uint32_t echo_up_time;   /**< Time when the echo signal is up */
+extern uint32_t echo_down_time; /**< Time when the echo signal is down */
+extern uint32_t object_count;   /**< Count of objects detected */
+extern uint16_t detection_flag; /**< Flag to check if an object is being detected */
 
 /**
  * @brief Configures the timer.

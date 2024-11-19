@@ -1,3 +1,9 @@
+/**
+ * @file motor_control.c
+ * @brief File for motor control functions
+ *
+ * This file contains the implementation of the functions that handle the motor control
+ */
 #include "../inc/motor_control.h"
 
 void config_dac()
@@ -8,9 +14,9 @@ void config_dac()
 
 void set_motor_speed(uint16_t level)
 {
-    if (level == 0)
+    if (level == STOP_MOTOR_VAL)
     {
-        DAC_UpdateValue(LPC_DAC, 0); /**< Set DAC value to 0 if level is 0 */
+        DAC_UpdateValue(LPC_DAC, STOP_MOTOR_VAL); /**< Set DAC value to 0 if level is 0 */
     }
     else
     {

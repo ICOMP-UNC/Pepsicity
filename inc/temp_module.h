@@ -17,6 +17,8 @@
 #define MAX_VOLTAGE        3.3    /**< Define the maximum voltage of the ADC */
 #define MAX_ADC_VALUE      4095   /**< Define the maximum value of the ADC */
 #define VOLTAGE_PER_DEGREE 0.01   /**< Define the voltage per degree */
+#define ADC_PRIORITY       1      /**< Define the priority of the ADC interrupt */
+#define SYSTICK_PRIORITY   0      /**< Define the priority of the SysTick interrupt */
 
 #define GET_TEMP(x) (x * MAX_VOLTAGE / (MAX_ADC_VALUE * VOLTAGE_PER_DEGREE)) /**< Transformation of ADC value to °C */
 

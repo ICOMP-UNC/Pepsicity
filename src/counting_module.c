@@ -7,6 +7,11 @@
 
 #include "../inc/counting_module.h"
 
+uint32_t echo_up_time = UP_STATIC_TIME; /**< Time when the echo signal is up */
+uint32_t echo_down_time = 0;            /**< Time when the echo signal is down */
+uint32_t object_count = 0;              /**< Count of objects detected */
+uint16_t detection_flag = FALSE;        /**< Flag to check if an object is being detected */
+
 void config_timer(void)
 {
     TIM_TIMERCFG_Type timer_cfg_struct;
@@ -79,9 +84,35 @@ void check_object(void)
         {
             object_count++;
 
-            // check operation mode
-            // if (operation_mode == mode a) -> send object count through UART
-            // if (operation_mode == mode c) -> send object count when it reaches a certain value
+            switch (mode)
+            {
+                case MODE_A:
+                {
+                    if (send_available)
+                    {
+                        char message[STANDARD_MESS_SIZE] = "\n\rSe ha contabilizado:";
+                        concat_decimal_to_string(object_count, message, BUFF_SIZE_3);
+                        strcat(message, "\n\r");
+                        send_data_dma_uart(message, sizeof(message));
+                    }
+                }
+                break;
+                case MODE_C:
+                {
+                    if (object_count == match_counter)
+                    {
+                        char message[STANDARD_MESS_SIZE] = "\n\rSe ah alcanzado el contador deseado:";
+                        concat_decimal_to_string(object_count, message, BUFF_SIZE_3);
+                        strcat(message, "\n\rIngrese un nuevo comando\n\r");
+                        send_data_dma_uart(message, sizeof(message));
+                        set_motor_speed(0);
+                        stop_counting_module();
+                        mode = MODE_B;
+                    }
+                }
+                break;
+                default: break;
+            }
 
             turn_on_led();
         }

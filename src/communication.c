@@ -44,7 +44,7 @@ void init_communication()
     char message[] = "\n\rBienvendo a Pepsicity.\n\rPuede cambiar el funcionamiento con M, o la velocidad con V y "
                      "solicitar el valor de temperatura T\n\r";
     send_data_dma_uart(message, sizeof(message));
-    restart_rx_uart(SIZE_MESSAGE);
+    restart_rx_uart(BUFF_SIZE_1);
 }
 
 void configure_uart()
@@ -73,7 +73,7 @@ void init_dma()
     GPDMA_ClearIntPending(GPDMA_STATCLR_INTTC, DMA_TX_CHANNEL);
     GPDMA_ChannelCmd(DMA_TX_CHANNEL, DISABLE);
     // Disable the transfer interrupt
-    LPC_GPDMACH1->DMACCConfig &= ~(1 << 31);
+    LPC_GPDMACH1->DMACCConfig &= ~(TX_INT);
 
     NVIC_EnableIRQ(DMA_IRQn);
 }
@@ -108,6 +108,14 @@ void restart_rx_uart(uint32_t size_message)
     GPDMA_ChannelCmd(DMA_RX_CHANNEL, ENABLE);
 }
 
+void concat_decimal_to_string(uint16_t data, char* message_dest, uint8_t digits)
+{
+    char temp_buffer[digits];
+    temp_buffer[digits] = '\0';
+    decimal_to_string(data, temp_buffer, digits);
+    strcat(message_dest, temp_buffer);
+}
+
 void received_data_interpretation()
 {
     switch (control_status)
@@ -120,7 +128,7 @@ void received_data_interpretation()
         {
             char message[] = "\n\rNo tendrías que poder ver esto, fuera de aquí\n\r";
             send_data_dma_uart(message, sizeof(message));
-            restart_rx_uart(SIZE_MESSAGE);
+            restart_rx_uart(BUFF_SIZE_1);
         }
         break;
             memset(data_Rx, '\0', RX_BUFF_SIZE);
@@ -138,7 +146,7 @@ void DMA_IRQHandler()
     else if (GPDMA_IntGetStatus(GPDMA_STAT_INTERR, DMA_RX_CHANNEL) ||
              GPDMA_IntGetStatus(GPDMA_STAT_INTERR, DMA_TX_CHANNEL))
     {
-        while (1)
+        while (TRUE)
             ;
     }
 }

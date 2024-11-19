@@ -9,6 +9,9 @@
 #define EXTERNAL_CONTROL_H
 
 #include "communication.h"
+#include "counting_module.h"
+#include "motor_control.h"
+#include "temp_module.h"
 
 /** Modes of operation */
 typedef enum
