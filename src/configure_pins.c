@@ -23,6 +23,14 @@ void configure_pins(void)
     // Configure the stop button pin
     PinCfg.Pinnum = PINSEL_PIN_11; /**< Pin 11 */
 
+    PinCfg.Portnum = PINSEL_PORT_0;
+    PinCfg.Pinnum = PINSEL_PIN_23;
+    PinCfg.Funcnum = PINSEL_FUNC_1;
+    PinCfg.Pinmode = PINSEL_PINMODE_TRISTATE;
+    PinCfg.OpenDrain = PINSEL_PINMODE_NORMAL;
+
+    PINSEL_ConfigPin(&PinCfg);
+
     PINSEL_ConfigPin(&PinCfg);
 
     // Configure the ECHO pin

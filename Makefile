@@ -9,6 +9,8 @@ SRCS =	newlib_stubs.c \
 		main.c \
 		configure_pins.c \
 		counting_module.c \
+		motor_control.c \
+		temp_module.c \
 		
  
 	 
