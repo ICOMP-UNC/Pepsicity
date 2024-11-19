@@ -94,7 +94,7 @@ uint16_t get_decimal_data(uint8_t* data)
 
 void decimal_to_string(uint16_t data, char* buffer, uint8_t digits)
 {
-    for (uint8_t digit = 0; digit < digits; i++)
+    for (uint8_t digit = 0; digit < digits; digit++)
     {
         buffer[digits - 1 - digit] = (data % BASE_10) + '0';
         data /= BASE_10;
