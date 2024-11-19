@@ -72,7 +72,7 @@ void configure_pins(void)
     PinCfg.Pinmode = PINSEL_PINMODE_TRISTATE;
 
     PINSEL_ConfigPin(&PinCfg);
-  
+
     // Set the TRIGGER pin as output
     GPIO_SetDir(PINSEL_PORT_0, TRIGGER_PIN, OUTPUT);
 

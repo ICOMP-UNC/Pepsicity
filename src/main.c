@@ -23,7 +23,7 @@ void EINT0_IRQHandler(void)
 
     // start the system
     init_counting_module(); // Initialize the counting module
-    config_dac(); /**< Initialize DAC */
+    config_dac();           /**< Initialize DAC */
 }
 
 /**
