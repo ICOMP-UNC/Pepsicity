@@ -7,17 +7,8 @@
 #include "LPC17xx.h"
 #endif
 
-#include "lpc17xx_adc.h"
-#include "lpc17xx_dac.h"
-#include "lpc17xx_exti.h"
-#include "lpc17xx_gpdma.h"
-#include "lpc17xx_gpio.h"
-#include "lpc17xx_pinsel.h"
-#include "lpc17xx_systick.h"
-#include "lpc17xx_timer.h"
-#include "lpc17xx_uart.h"
-
 #include "../inc/configure_pins.h"
+#include "../inc/temp_module.h"
 
 /**
  * @brief EINT0 interrupt handler
@@ -48,15 +39,14 @@ void EINT1_IRQHandler(void)
  */
 int main(void)
 {
-    SystemInit(); // Initialize the system
-
-    configure_pins(); // Configure the pins
+    SystemInit();       // Initialize the system
+    init_temp_module(); // Initialize the temperature module
+    configure_pins();   // Configure the pins
 
     configure_interrupts(); // Configure the interrupts
 
     while (1)
     {
-        __asm("nop");
     }
 
     return 0; // Should never reach this
