@@ -9,6 +9,8 @@
 
 #include "../inc/configure_pins.h"
 #include "../inc/motor_control.h"
+#include "../inc/temp_module.h"
+
 
 /**
  * @brief EINT0 interrupt handler
@@ -38,9 +40,9 @@ void EINT1_IRQHandler(void)
  */
 int main()
 {
-    SystemInit(); // Initialize the system
-
-    configure_pins(); // Configure the pins
+    SystemInit();       // Initialize the system
+    init_temp_module(); // Initialize the temperature module
+    configure_pins();   // Configure the pins
 
     configure_interrupts(); // Configure the interrupts
 
