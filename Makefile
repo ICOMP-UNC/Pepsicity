@@ -8,6 +8,9 @@ SRCS =	newlib_stubs.c \
 		system_LPC17xx.c \
 		main.c \
 		configure_pins.c \
+    counting_module.c \
+		motor_control.c \
+		temp_module.c \
 		communication.c \
 		external_control.c 
 		
