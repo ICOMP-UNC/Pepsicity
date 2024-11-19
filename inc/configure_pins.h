@@ -20,10 +20,19 @@
 #include "../lib/CMSISv2p00_LPC17xx/drivers/include/lpc17xx_pinsel.h"
 
 /**
+ * OUTPUT and INPUT Definitions
+ */
+#define OUTPUT 1 /**< Output */
+#define INPUT  0 /**< Input */
+
+/**
  * Define the pins for the project
  */
-#define START_BUTTON_PIN ((uint32_t)(1 << 10)) /**< Start button pin */
-#define STOP_BUTTON_PIN  ((uint32_t)(1 << 11)) /**< Stop button pin */
+#define START_BUTTON_PIN ((uint32_t)(1 << 10)) /**< 2.10 */
+#define STOP_BUTTON_PIN  ((uint32_t)(1 << 11)) /**< 2.11 */
+#define ECHO_PIN         ((uint32_t)(1 << 4))  /**< P0.4 */
+#define TRIGGER_PIN      ((uint32_t)(1 << 5))  /**< P0.5 */
+#define LED_PIN          ((uint32_t)(1 << 6))  /**< P0.6 */
 
 /**
  * @brief Configure the pins for the project

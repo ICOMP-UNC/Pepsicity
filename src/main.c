@@ -8,9 +8,9 @@
 #endif
 
 #include "../inc/configure_pins.h"
+#include "../inc/counting_module.h"
 #include "../inc/motor_control.h"
 #include "../inc/temp_module.h"
-
 
 /**
  * @brief EINT0 interrupt handler
@@ -21,6 +21,7 @@ void EINT0_IRQHandler(void)
     EXTI_ClearEXTIFlag(EXTI_EINT0);
 
     // start the system
+    init_counting_module(); // Initialize the counting module
     config_dac(); /**< Initialize DAC */
 }
 
@@ -33,6 +34,7 @@ void EINT1_IRQHandler(void)
     EXTI_ClearEXTIFlag(EXTI_EINT1);
 
     // stop the system
+    stop_counting_module(); // Stop the counting module
 }
 
 /**
