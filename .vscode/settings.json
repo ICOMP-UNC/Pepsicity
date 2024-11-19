@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "lpc17xx_gpdma.h": "c",
-        "lpc17xx_uart.h": "c"
-    }
-}
